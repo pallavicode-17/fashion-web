@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./PlaceOrder.css";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
-import { API_URL } from "../../config";  
+import { API_URL } from "../../../config";
 export default function PlaceOrder() {
   const navigate = useNavigate();
 
