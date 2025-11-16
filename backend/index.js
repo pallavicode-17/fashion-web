@@ -75,12 +75,16 @@ const upload = multer({ storage });
 app.use('/images', express.static('upload/images'));
 
 // upload endpoint
-app.post("/upload", upload.single('product'), (req,res) => {
+app.post("/upload", upload.single('product'), (req, res) => {
   if (!req.file) return res.status(400).json({ success: 0, message: 'No file uploaded' });
-  res.json({
-    success: 1,
-    image_url: `http://localhost:${port}/images/${req.file.filename}`
-  });
+
+  // prefer env var if present
+  const hostFromEnv = process.env.API_URL;
+  const host = hostFromEnv || `${req.protocol}://${req.get('host')}`;
+
+  const imageUrl = `${host.replace(/\/$/, "")}/images/${encodeURIComponent(req.file.filename)}`;
+
+  res.json({ success: 1, image_url: imageUrl });
 });
 
 // Schemas (you can move these to separate files later)
