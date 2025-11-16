@@ -2,9 +2,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FashionPage.css";
-import { ShopContext } from "../../Context/ShopContext";
-import { imageUrl } from "../../utils/imageUrl"; // <-- helper
-import placeholderImg from "../../assets/img/placeholder.png"; // add this file
+import { imageUrl } from "../../utils/imageUrl";
+import { ShopContext } from "../../Context/ShopContext"; // ensure this path + case matches your project
+const API_URL = "https://fashion-web-7skw.onrender.com";// <--- as requested (root import)
 
 export default function FashionPage() {
   const [menProducts, setMenProducts] = useState([]);
@@ -12,6 +12,7 @@ export default function FashionPage() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // use the context function (no local cart state)
   const { addToCart } = useContext(ShopContext);
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export default function FashionPage() {
     setLoading(true);
     setError("");
 
-    fetch(`https://fashion-web-7skw.onrender.com/products?category=men&limit=4`)
+    fetch(`${API_URL}/products?category=men&limit=4`)
       .then((res) => {
         if (!res.ok) throw new Error(`Server returned ${res.status}`);
         return res.json();
@@ -40,12 +41,13 @@ export default function FashionPage() {
     };
   }, []);
 
-  function renderCard(item, key) {
+ function renderCard(item, key) {
     const imgSrc = imageUrl(item.image || item.img || item.imageUrl || "");
     const title = item.title || item.name || "Product";
     const price = item.price ?? item.new_price ?? 0;
     const oldPrice = item.oldPrice ?? item.old_price ?? null;
 
+  
     return (
       <div
         className="fashion-card"
@@ -54,15 +56,7 @@ export default function FashionPage() {
         style={{ cursor: "pointer" }}
       >
         <div className="fashion-img-box">
-          <img
-            src={imgSrc || placeholderImg}
-            alt={title}
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = placeholderImg;
-              e.currentTarget.style.opacity = 0.9;
-            }}
-          />
+          <img src={imgSrc} alt={title} onError={(e) => (e.currentTarget.style.opacity = 0.6)} />
           {item.rating && <div className="fashion-rating">{item.rating}</div>}
           {item.color && <div className="fashion-color">{item.color}</div>}
           {item.size && <div className="fashion-size">Size: {item.size}</div>}
@@ -85,10 +79,10 @@ export default function FashionPage() {
             type="button"
             className="cart-btn"
             onClick={(e) => {
-              e.stopPropagation();
+              e.stopPropagation(); // prevent card navigation
+              // context addToCart expects item id (per your ShopContext). If it expects full object, pass item instead.
               if (typeof addToCart === "function") {
-                // your ShopContext earlier expected addToCart(itemId)
-                addToCart(item.id ?? item._id ?? item);
+                addToCart(item.id);
               } else {
                 console.warn("addToCart not found in ShopContext");
               }
