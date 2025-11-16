@@ -3,31 +3,64 @@ import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../../Context/ShopContext"; // << adjust relative path to match your project
 // import "./PlaceOrder.css"; // optional styles
 
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
 const STATUS_OPTIONS = ["Order Packed", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
 
 export default function AdminOrders() {
   const { orders = [], updateOrder, removeOrder, setOrders } = useContext(ShopContext);
   const [expandedOrder, setExpandedOrder] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState("");
 
   useEffect(() => {
     // Fetch orders from backend to keep admin in sync with server (optional)
-    // If you already persist orders in localStorage via context, this is optional.
+    let cancelled = false;
     (async () => {
+      setLoading(true);
+      setFetchError("");
       try {
-        const res = await fetch("http://localhost:4000/orders");
+        const res = await fetch(`${API_URL}/orders`);
         if (res.ok) {
           const data = await res.json();
-          if (typeof setOrders === "function") setOrders(data);
+          if (!cancelled && typeof setOrders === "function") setOrders(Array.isArray(data) ? data : []);
         } else {
           console.warn("Failed to fetch orders from server:", res.status);
+          if (!cancelled) setFetchError(`Failed to fetch orders (status ${res.status})`);
         }
       } catch (err) {
         console.warn("Error fetching orders:", err);
+        if (!cancelled) setFetchError("Error fetching orders. Check network/backend.");
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
+
+    return () => { cancelled = true; };
   }, [setOrders]);
 
   const toggleExpand = (id) => setExpandedOrder((p) => (p === id ? null : id));
+
+  if (loading) {
+    return (
+      <div className="placeorder-container">
+        <h1>Orders</h1>
+        <div className="card">
+          <p className="empty">Loading orders…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (fetchError) {
+    return (
+      <div className="placeorder-container">
+        <h1>Orders</h1>
+        <div className="card">
+          <p className="empty" style={{ color: "red" }}>{fetchError}</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!orders || orders.length === 0) {
     return (
