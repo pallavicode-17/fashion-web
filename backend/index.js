@@ -5,8 +5,9 @@ import jwt from 'jsonwebtoken';
 import multer from 'multer';
 import path from 'path';
 import cors from 'cors';
-
+import fs from 'fs';
 import os from 'os';
+
 
 const port = process.env.PORT || 4000;
 const app = express();
@@ -14,6 +15,7 @@ const app = express();
 // middleware
 app.use(express.json());
 app.use(cors());
+app.set('trust proxy', true);
 
 // DB connection (consider moving connection string to .env as MONGO_URI)
 const mongoUri = process.env.MONGO_URI || "mongodb+srv://pal_123:12345@cluster0.yx3ael2.mongodb.net/fashion";
@@ -63,28 +65,38 @@ app.get('/products-debug', (req, res) => {
 });
 
 app.get("/", (req,res) => res.send("Express App is Running"));
-
+const IMAGES_DIR = path.join(process.cwd(), 'upload', 'images');
+fs.mkdirSync(IMAGES_DIR, { recursive: true });
 // Image Storage Engine
 const storage = multer.diskStorage({
-  destination: './upload/images',
-  filename: (req,file,cb) => cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`)
+  destination: (req, file, cb) => cb(null, IMAGES_DIR),
+  filename: (req, file, cb) => {
+    const safeName = `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, safeName);
+  }
 });
 const upload = multer({ storage });
 
-// static images
-app.use('/images', express.static('upload/images'));
+// serve static images using absolute path
+app.use('/images', express.static(IMAGES_DIR, { maxAge: '7d' }));
 
-// upload endpoint
+// upload endpoint (robust host/proto detection)
 app.post("/upload", upload.single('product'), (req, res) => {
   if (!req.file) return res.status(400).json({ success: 0, message: 'No file uploaded' });
 
-  // prefer env var if present
-  const hostFromEnv = process.env.API_URL;
-  const host = hostFromEnv || `${req.protocol}://${req.get('host')}`;
+  // Prefer an environment variable (set this in Render dashboard)
+  const ENV_HOST = (process.env.API_URL || "").replace(/\/$/, ""); // e.g. "https://fashion-web-backend-nwvl.onrender.com"
+  // Fallback: use forwarded proto (if behind proxy) or req.protocol
+  const proto = req.headers['x-forwarded-proto'] || req.protocol;
+  const hostHeader = req.get('host'); // e.g. 'your-app.onrender.com'
+  const host = ENV_HOST || `${proto}://${hostHeader}`;
 
-  const imageUrl = `${host.replace(/\/$/, "")}/images/${encodeURIComponent(req.file.filename)}`;
+  const imageUrl = `${host}/images/${encodeURIComponent(req.file.filename)}`;
 
-  res.json({ success: 1, image_url: imageUrl });
+  // optionally log for debugging
+  console.log('Uploaded image saved:', req.file.path, 'image_url:', imageUrl);
+
+  return res.json({ success: 1, image_url: imageUrl });
 });
 
 // Schemas (you can move these to separate files later)
