@@ -1,93 +1,186 @@
-import React, { useState } from 'react'
-import './AddProduct.css'
+// admin/src/Pages/AddProduct.jsx
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./AddProduct.css";
+import upload_area from "../../assets/upload_area.svg";
 
-import upload_area from '../../assets/upload_area.svg'
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // admin uses direct link
 
 const AddProduct = () => {
+  const navigate = useNavigate?.() || null;
+  const [imageFile, setImageFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [productDetails, setProductDetails] = useState({
+    name: "",
+    image: "",
+    category: "women",
+    new_price: "",
+    old_price: "",
+  });
+  const [loading, setLoading] = useState(false);
 
-    const [image,setImage] = useState(false);
-    const [productDetails, setProductDetails] = useState({
-        name: "",
-        image: "",
-        category: "women",
-        new_price: "",
-        old_price: ""
-    })
+  const imageHandler = (e) => {
+    const file = e.target.files?.[0] || null;
+    setImageFile(file);
+    setPreviewUrl(file ? URL.createObjectURL(file) : null);
+  };
 
-    const imageHandler = (e) => {
-        setImage(e.target.files[0]);
+  const changeHandler = (e) => {
+    const { name, value } = e.target;
+    setProductDetails((p) => ({ ...p, [name]: value }));
+  };
+
+  const validate = () => {
+    if (!productDetails.name.trim()) return "Enter product title";
+    if (!productDetails.new_price || isNaN(Number(productDetails.new_price))) return "Enter a valid offer price";
+    if (!productDetails.old_price || isNaN(Number(productDetails.old_price))) return "Enter a valid old price";
+    if (!productDetails.category) return "Select a category";
+    if (!imageFile) return "Please upload a product image";
+    return "";
+  };
+
+  const Add_Product = async () => {
+    const err = validate();
+    if (err) {
+      alert(err);
+      return;
     }
 
-    const changeHandler = (e) => {
-        setProductDetails({...productDetails,[e.target.name]:e.target.value})
-    } 
+    setLoading(true);
 
-    const Add_Product = async () => {
-        console.log(productDetails);
-        let responseData;
-        let product = productDetails;
-        let formData = new FormData();
-        formData.append('product', image);
+    try {
+      // 1) Upload image
+      const formData = new FormData();
+      formData.append("product", imageFile);
 
-        await fetch("http://localhost:4000/upload",{
-            method: 'POST',
-            headers: {Accept:'application/json'},
-            body: formData
-        }).then((res) => res.json()).then((data) => {responseData=data});
+      const uploadRes = await fetch(`${API_URL}/upload`, {
+        method: "POST",
+        // DO NOT set Content-Type here — browser will set multipart boundary
+        body: formData,
+      });
 
-        if(responseData.success){
-            product.image = responseData.image_url;
-            console.log(product);
-            await fetch("http://localhost:4000/addproduct", {
-                method: 'POST',
-                headers: {Accept: 'application/json', 'Content-Type': 'application/json'},
-                body: JSON.stringify(product)
-            })
-            .then(res => res.json())
-            .then(data => {
-                data.success?alert("Product Added"):alert("Failed");
-            })
-            window.location.replace('/list-product');
-        }
+      if (!uploadRes.ok) {
+        const txt = await uploadRes.text().catch(() => null);
+        throw new Error(txt || `Image upload failed (status ${uploadRes.status})`);
+      }
+
+      const uploadJson = await uploadRes.json();
+      if (!uploadJson?.success || !uploadJson?.image_url) {
+        throw new Error(uploadJson?.message || "Upload response invalid");
+      }
+
+      // 2) Post product data
+      const productPayload = {
+        ...productDetails,
+        image: uploadJson.image_url,
+        new_price: Number(productDetails.new_price),
+        old_price: Number(productDetails.old_price),
+      };
+
+      const addRes = await fetch(`${API_URL}/addproduct`, {
+        method: "POST",
+        headers: { Accept: "application/json", "Content-Type": "application/json" },
+        body: JSON.stringify(productPayload),
+      });
+
+      if (!addRes.ok) {
+        const txt = await addRes.text().catch(() => null);
+        throw new Error(txt || `Add product failed (status ${addRes.status})`);
+      }
+
+      const addJson = await addRes.json();
+      if (addJson.success) {
+        alert("Product added successfully");
+        // redirect to product list
+        if (navigate) navigate("/list-product");
+        else window.location.replace("/list-product");
+      } else {
+        throw new Error(addJson.error || "Failed to add product");
+      }
+    } catch (err) {
+      console.error("Add product error:", err);
+      alert(err.message || "Failed to add product. See console for details.");
+    } finally {
+      setLoading(false);
     }
+  };
 
   return (
-    <div className='add-product'>
+    <div className="add-product">
       <div className="add-product-itemfield">
         <p>Product Title</p>
-        <input value={productDetails.name} onChange={changeHandler} type="text" name='name' placeholder='Type here' />
+        <input
+          value={productDetails.name}
+          onChange={changeHandler}
+          type="text"
+          name="name"
+          placeholder="Type here"
+        />
       </div>
+
       <div className="add-product-price">
         <div className="add-product-itemfield">
-            <p>Price</p>
-            <input value={productDetails.old_price} onChange={changeHandler} type="text" name="old_price" placeholder='Type here' />
+          <p>Price</p>
+          <input
+            value={productDetails.old_price}
+            onChange={changeHandler}
+            type="number"
+            name="old_price"
+            placeholder="Type here"
+          />
         </div>
         <div className="add-product-itemfield">
-            <p>Offer Price</p>
-            <input value={productDetails.new_price} onChange={changeHandler} type="text" name="new_price" placeholder='Type here' />
+          <p>Offer Price</p>
+          <input
+            value={productDetails.new_price}
+            onChange={changeHandler}
+            type="number"
+            name="new_price"
+            placeholder="Type here"
+          />
         </div>
       </div>
+
       <div className="add-product-itemfield">
         <p>Product Category</p>
-        <select value={productDetails.category} onChange={changeHandler} name="category" className='add-product-selector'>
-            <option value="Bag">Bags</option>
-            <option value="Acessories">Accesories</option>
-            <option value="Men">Men</option>
-            <option value="Women">Women</option>
-            <option value="Hats">Hats</option>
-            <option value="footwear">FootWear</option>
-            <option value="fragences">Fragences</option>
+        <select
+          value={productDetails.category}
+          onChange={changeHandler}
+          name="category"
+          className="add-product-selector"
+        >
+          <option value="Bag">Bags</option>
+          <option value="Accessories">Accessories</option>
+          <option value="Men">Men</option>
+          <option value="Women">Women</option>
+          <option value="Hats">Hats</option>
+          <option value="Footwear">FootWear</option>
+          <option value="Fragrances">Fragrences</option>
         </select>
       </div>
-      <div className="add-product-itemfield">
-        <label htmlFor="file-input">
-            <img src={image?URL.createObjectURL(image):upload_area} className='add-product-thumbnail-img' alt="" />
-        </label>
-        <input onChange={imageHandler} type="file" name='image' id='file-input' hidden />
-      </div>
-      <button onClick={() => {Add_Product()}} className='add-product-btn'>Add Product</button>
-    </div>
-  )
-}
 
-export default AddProduct
+      <div className="add-product-itemfield">
+        <label htmlFor="file-input" style={{ cursor: "pointer" }}>
+          <img
+            src={previewUrl || upload_area}
+            className="add-product-thumbnail-img"
+            alt="upload preview"
+            style={{ maxWidth: 240, objectFit: "cover" }}
+          />
+        </label>
+        <input onChange={imageHandler} type="file" name="image" id="file-input" accept="image/*" hidden />
+      </div>
+
+      <button
+        onClick={Add_Product}
+        className="add-product-btn"
+        disabled={loading}
+        style={{ opacity: loading ? 0.7 : 1 }}
+      >
+        {loading ? "Adding product..." : "Add Product"}
+      </button>
+    </div>
+  );
+};
+
+export default AddProduct;
