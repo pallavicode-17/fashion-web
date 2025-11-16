@@ -1,7 +1,7 @@
 // src/pages/MyOrders.jsx
 import React, { useEffect, useState } from "react";
 import "./MyOrders.css";
-import { API_URL } from "../../../config";
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
 export default function MyOrders() {
   const [orders, setOrders] = useState(null);
   const [loading, setLoading] = useState(true);
