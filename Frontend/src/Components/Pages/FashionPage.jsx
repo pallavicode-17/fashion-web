@@ -3,7 +3,7 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FashionPage.css";
 import { ShopContext } from "../../Context/ShopContext"; // ensure this path + case matches your project
-import { API_URL } from "../../../config"; // <--- as requested (root import)
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com";// <--- as requested (root import)
 
 export default function FashionPage() {
   const [menProducts, setMenProducts] = useState([]);
