@@ -7,11 +7,11 @@ import { banners as staticBanners } from "../assets/all_product"; // if banners 
 import { imageUrl } from "../utils/imageUrl"; // helper from above
 
 // Import UI assets so bundler includes them
-import ArrowLeft from "../assets/img/Arrow Left.png";
-import ArrowRight from "../assets/img/Arrow Right.png";
-import FurcoatImg from "../assets/img/furcoat.png";
-import BagsImg from "../assets/img/bags.png";
-import CoatbagImg from "../assets/img/coatbag.png";
+import ArrowLeft from "../../public/img/ArrowLeft.png";
+import ArrowRight from "../../public/img/ArrowRight.png";
+import FurcoatImg from "../../public/img/furcoat.png";
+import BagsImg from ".../../public/img/bags.png";
+import CoatbagImg from "../../public/img/coatbag.png";
 
 export default function Main() {
   const { all_product = [], addToCart } = useContext(ShopContext);
