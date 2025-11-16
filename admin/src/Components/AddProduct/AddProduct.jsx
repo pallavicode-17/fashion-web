@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AddProduct.css";
+
 import upload_area from "../../assets/upload_area.svg";
 
 const API_URL = "https://fashion-web-7skw.onrender.com"; // admin uses direct link

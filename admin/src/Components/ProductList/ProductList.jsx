@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./ProductList.css";
 import cross_icon from "../../assets/cart_cross_icon.png";
+import { imageUrl } from "../utils/imageUrl"; // adjust relative path if needed
 
 const API_URL = "https://fashion-web-7skw.onrender.com"; // admin uses direct link
 
@@ -84,11 +85,8 @@ const ProductList = () => {
         {allProducts.map((product) => (
           <React.Fragment key={product.id ?? product._id}>
             <div className="products-list-format-main product-list-format">
-              <img
-                className="product-list-producticon"
-                src={imageUrl(product.image)}
-                alt={product.name || "product"}
-                onError={(e) => (e.currentTarget.style.opacity = 0.6)}
+              <img className="product-list-producticon" src={imageUrl(product.image)}
+              onError={(e) => (e.currentTarget.style.opacity = 0.6)}
                 style={{ width: 64, height: 64, objectFit: "cover" }}
               />
               <p>{product.name}</p>

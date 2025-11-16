@@ -9,6 +9,7 @@ import { accessoriesData } from "../../assets/all_product";
 
 
 
+
 // ---- Main Fashion component ----
 export default function Fashion() {
   const [cart, setCart] = useState([]);

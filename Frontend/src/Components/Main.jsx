@@ -192,23 +192,21 @@ export default function Main() {
           </div>
         </div>
 
-        <div className="newarrivals-row">
+       
+            <div className="newarrivals-row">
           {new_arrivals.map((product) => (
             <div className="newarrivals-card" key={product.id}>
                <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={product.image || `/${product.img}`} alt={product.title} className="fa-newarrivals-img" />
+              <img src={imageUrl(product.image || product.img)} alt={product.title} className="fa-newarrivals-img" />
               <div className="newarrivals-info">
                 <span className="newarrivals-title">{product.title}</span>
                 <span className="newarrivals-price">{product.price || `Rs. ${product.new_price}`}</span>
-                <div className="newarrivals-stars">{product.rating || "★★★★☆"}
-
-                </div>
+                <div className="newarrivals-stars">{product.rating || "★★★★☆"}</div>
                 </div>
                 </Link>
-                
+
                 <button className="newarrivals-cartbtn" onClick={() => addToCart(product.id)}>Add to cart</button>
               </div>
-           
           ))}
           <div className="grey-box3"></div>
         </div>

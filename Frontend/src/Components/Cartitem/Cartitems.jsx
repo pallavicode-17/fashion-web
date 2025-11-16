@@ -1,12 +1,15 @@
+// src/components/CartItem/CartItem.jsx
 import React, { useContext } from "react";
 import "./CartItem.css";
 import { ShopContext } from "../../Context/ShopContext";
 import { useNavigate } from "react-router-dom";
+import { imageUrl } from "../../utils/imageUrl"; // <- adjust path if needed
+import placeholderImg from "../../assets/img/placeholder.png"; // optional local fallback
 
 const CartItems = () => {
-  const { all_product, cartItems, removeFromCart, getTotalCartValue } = useContext(ShopContext);
+  const { all_product = [], cartItems = {}, removeFromCart, getTotalCartValue } = useContext(ShopContext);
   const cartValue = getTotalCartValue();
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div className="cartitems">
@@ -21,41 +24,55 @@ const CartItems = () => {
 
       <hr />
 
-      {all_product.map((e) => {
-        const qty = cartItems?.[e.id] || 0;
-        if (qty > 0) {
-          return (
-            <div className="cartitems-row" key={e.id}>
-              <div className="cartitems-format cartitems-format-main">
-                <img className="carticon-product-icon" src={e.image} alt={e.name} />
-                <p>{e.name}</p>
-                <p>RS.{e.new_price}</p>
+      {all_product.map((product) => {
+        const qty = cartItems?.[product.id] || 0;
+        if (qty <= 0) return null;
 
-                {/* quantity (you had this as a button; keep it or replace with input if desired) */}
-                <button className="cartitems-quantity" aria-label={`Quantity of ${e.name}`}>
-                  {qty}
+        // build safe image src using helper
+        const src = imageUrl(product.image || product.img || "");
+
+        return (
+          <div className="cartitems-row" key={product.id ?? product._id}>
+            <div className="cartitems-format cartitems-format-main">
+              <img
+                className="carticon-product-icon"
+                src={src}
+                alt={product.name || "Product"}
+                onError={(e) => {
+                  // fallback to placeholder if image fails to load
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = placeholderImg;
+                }}
+                style={{ width: 64, height: 64, objectFit: "cover" }}
+              />
+              <p>{product.name}</p>
+              <p>RS.{product.new_price}</p>
+
+              <button
+                className="cartitems-quantity"
+                aria-label={`Quantity of ${product.name}`}
+                title={`Quantity: ${qty}`}
+              >
+                {qty}
+              </button>
+
+              <p>Rs.{(product.new_price || 0) * qty}</p>
+
+              <div>
+                <button
+                  className="remove-btn"
+                  title={`Remove ${product.name}`}
+                  aria-label={`Remove ${product.name} from cart`}
+                  onClick={() => removeFromCart(product.id)}
+                >
+                  &times;
                 </button>
-
-                <p>Rs.{e.new_price * qty}</p>
-
-                {/* Remove button — use the map variable `e` */}
-                <div>
-                  <button
-                    className="remove-btn"
-                    title="Remove item"
-                    aria-label={`Remove ${e.name} from cart`}
-                    onClick={() => removeFromCart(e.id)}
-                  >
-                    &times;
-                  </button>
-                </div>
               </div>
-
-              <hr />
             </div>
-          );
-        }
-        return null;
+
+            <hr />
+          </div>
+        );
       })}
 
       <div className="cartitems-down">
@@ -64,22 +81,28 @@ const CartItems = () => {
           <div>
             <div className="cartitems-total-item">
               <p>Subtotal</p>
-              <p>Rs.{cartValue}</p>
+              <p>Rs.{cartValue.toFixed ? cartValue.toFixed(2) : cartValue}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
               <p>Shipping Fee</p>
-              <p>{cartValue === 0 || cartValue > 800 ? "Free" : "$100"}</p>
+              <p>{cartValue === 0 || cartValue > 800 ? "Free" : "Rs. 100"}</p>
             </div>
             <hr />
             <div className="cartitems-total-item">
               <h3>Total</h3>
-              <h3>Rs.{cartValue === 0 || cartValue > 800 ? cartValue : cartValue + 100}</h3>
+              <h3>
+                Rs.
+                {cartValue === 0 || cartValue > 800
+                  ? cartValue.toFixed ? cartValue.toFixed(2) : cartValue
+                  : (cartValue + 100).toFixed ? (cartValue + 100).toFixed(2) : cartValue + 100}
+              </h3>
             </div>
           </div>
-         
-<button onClick={() => navigate("/placeorder")}>PROCEED TO CHECKOUT</button>
 
+          <button onClick={() => navigate("/placeorder")} className="proceed-btn">
+            PROCEED TO CHECKOUT
+          </button>
         </div>
 
         <div className="cartitems-promocode">
