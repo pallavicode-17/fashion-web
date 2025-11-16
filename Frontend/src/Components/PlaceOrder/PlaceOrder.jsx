@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./PlaceOrder.css";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
-
+import { API_URL } from "../../config";  
 export default function PlaceOrder() {
   const navigate = useNavigate();
 
@@ -110,44 +110,35 @@ export default function PlaceOrder() {
     };
 
     setLoading(true);
-    try {
-      // POST to backend with auth-token
+  try {
       let serverData = null;
-      try {
-        const res = await fetch("http://localhost:4000/orders", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "auth-token": token, // send token so backend can associate user
-          },
-          body: JSON.stringify(payload),
-        });
 
-        if (!res.ok) {
-          // try to parse error body or throw generic
-          const text = await res.text().catch(() => null);
-          throw new Error(text || `Server responded ${res.status}`);
-        }
+      // 💥 REPLACED localhost with API_URL
+      const res = await fetch(`${API_URL}/orders`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "auth-token": token,
+        },
+        body: JSON.stringify(payload),
+      });
 
-        serverData = await res.json(); // should contain { success: true, id: "ord_..." }
-      } catch (err) {
-        // network or server error — we still create a local order so UI isn't blocked
-        console.warn("Order API call failed; saving locally. Error:", err);
+      if (!res.ok) {
+        const text = await res.text().catch(() => null);
+        throw new Error(text || `Server responded ${res.status}`);
       }
 
-      // If server returned id, use it; otherwise addOrder will generate id
+      serverData = await res.json();
+
       if (typeof addOrder === "function") {
         const id = serverData?.id || undefined;
         await addOrder({ ...payload, id });
-      } else {
-        console.warn("addOrder not found in context; order saved only to server if server succeeded.");
       }
 
-      // clear cart in UI and server if clearCart handles server sync
       if (typeof clearCart === "function") clearCart();
 
       setSuccessMsg("Order placed successfully!");
-      // navigate to orders (customer orders page)
+
       setTimeout(() => navigate("/orders"), 700);
     } catch (err) {
       console.error(err);
@@ -155,7 +146,6 @@ export default function PlaceOrder() {
     } finally {
       setLoading(false);
     }
-  }
 
   return (
     <div className="placeorder-container">
