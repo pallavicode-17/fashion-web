@@ -1,6 +1,7 @@
 // src/pages/LoginSignup.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './CSS/Login.css'
 const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // adjust path if config.js is not in src/
 
 const LoginSignup = () => {
