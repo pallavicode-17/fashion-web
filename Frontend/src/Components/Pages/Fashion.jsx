@@ -4,7 +4,7 @@ import "./ClothesPage.css";
 import "./HandbagsPage.css";
 import { clothesData, handbagsData, accessoriesData } from "../../assets/all_product";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
-import { API_URL } from "../config"; // adjust path if config is in src/
+import { API_URL } from "../../../config"; // adjust path if config is in src/
 
 export default function Fashion() {
   // use app-wide cart functions from context
