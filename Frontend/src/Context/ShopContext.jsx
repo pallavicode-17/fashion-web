@@ -1,5 +1,5 @@
-// src/Context/ShopContext.jsx  (merge into your existing file)
 import React, { createContext, useEffect, useState } from "react";
+import { API_URL } from "../config";  // <--- NEW
 
 export const ShopContext = createContext(null);
 
@@ -26,18 +26,21 @@ const ShopContextProvider = (props) => {
   }, [orders]);
 
   useEffect(() => {
-    // load products (existing)
-    fetch("http://localhost:4000/allproducts")
+    // load products
+    fetch(`${API_URL}/allproducts`)
       .then((res) => res.json())
       .then((data) => setAll_Product(data))
       .catch((err) => console.error("Failed to fetch products:", err));
 
-    // load server-side cart if needed (existing logic)
+    // load server cart
     const token = localStorage.getItem("auth-token");
     if (token) {
-      fetch("http://localhost:4000/getcart", {
+      fetch(`${API_URL}/getcart`, {
         method: "POST",
-        headers: { "Content-Type": "application/json", "auth-token": token },
+        headers: { 
+          "Content-Type": "application/json",
+          "auth-token": token 
+        },
         body: JSON.stringify({}),
       })
         .then((res) => res.json())
@@ -48,20 +51,19 @@ const ShopContextProvider = (props) => {
     }
   }, []);
 
-  // cart functions (existing)
+  // cart functions
   const addToCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: (prev[itemId] || 0) + 1 }));
-    // optional server sync...
   };
+
   const removeFromCart = (itemId) => {
     setCartItems((prev) => ({ ...prev, [itemId]: Math.max((prev[itemId] || 0) - 1, 0) }));
   };
+
   const clearCart = () => {
-  setCartItems(getDefaultCart());
-  // if you persist cart in localStorage, remove it:
-  localStorage.removeItem("cart");
-  // optionally persist to server if logged in (call /clearcart)
-};
+    setCartItems(getDefaultCart());
+    localStorage.removeItem("cart");
+  };
 
   const getTotalCartValue = () => {
     let total = 0;
@@ -74,9 +76,10 @@ const ShopContextProvider = (props) => {
     }
     return total;
   };
-  const getTotalCartItems = () => Object.values(cartItems).reduce((acc, v) => acc + (v || 0), 0);
 
-  // Orders API for app-wide use
+  const getTotalCartItems = () =>
+    Object.values(cartItems).reduce((acc, v) => acc + (v || 0), 0);
+
   const addOrder = (orderPayload) => {
     const id = orderPayload.id || `ord_${Date.now()}`;
     const order = {
@@ -94,10 +97,9 @@ const ShopContextProvider = (props) => {
   };
 
   const updateOrder = (orderId, patch = {}) => {
-    setOrders((prev) => {
-      const next = prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o));
-      return next;
-    });
+    setOrders((prev) =>
+      prev.map((o) => (o.id === orderId ? { ...o, ...patch } : o))
+    );
   };
 
   const removeOrder = (orderId) => {
@@ -119,10 +121,14 @@ const ShopContextProvider = (props) => {
     removeOrder,
     getOrders,
     orders,
-    setOrders, // expose if admin wants to replace all
+    setOrders,
   };
 
-  return <ShopContext.Provider value={contextValue}>{props.children}</ShopContext.Provider>;
+  return (
+    <ShopContext.Provider value={contextValue}>
+      {props.children}
+    </ShopContext.Provider>
+  );
 };
 
 export default ShopContextProvider;
