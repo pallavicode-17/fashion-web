@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./ProductList.css";
 import cross_icon from "../../assets/cart_cross_icon.png";
-import { imageUrl } from "../utils/imageUrl"; // adjust relative path if needed
+import { imageUrl } from "../../utils/imageUrl";// adjust relative path if needed
 
 const API_URL = "https://fashion-web-7skw.onrender.com"; // admin uses direct link
 
