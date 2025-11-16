@@ -1,7 +1,7 @@
 // src/pages/LoginSignup.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { API_URL } from "../../../config"; // adjust path if config.js is not in src/
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // adjust path if config.js is not in src/
 
 const LoginSignup = () => {
   const [state, setState] = useState('Login');
