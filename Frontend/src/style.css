@@ -401,7 +401,7 @@
 .card-men.for-men {
   width: 600px;
   height: 417px;
-  background-image: url("img/men.png");
+  background-image: url("../public/img/men.png");
   position: relative;
   margin-left: 12px;
 }
@@ -519,7 +519,7 @@
 
 /* Women section card background */
 .card-women.for-women {
-  background-image: url("img/women.png");
+  background-image: url("../public/img/men.png");
   width: 475px;
   height: 417px;
 }
