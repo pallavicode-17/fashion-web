@@ -1,5 +1,5 @@
 // src/utils/imageUrl.js
-export const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; 
+const API_URL = "https://fashion-web-7skw.onrender.com";
 // ← set this to your actual backend hostname that serves /images
 
 export function imageUrl(img) {
