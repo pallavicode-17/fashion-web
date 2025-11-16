@@ -1,7 +1,7 @@
 // src/pages/MyOrders.jsx
 import React, { useEffect, useState } from "react";
 import "./MyOrders.css";
-
+import { API_URL } from "../config"; 
 export default function MyOrders() {
   const [orders, setOrders] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,9 +18,13 @@ export default function MyOrders() {
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch("http://localhost:4000/orders/mine", {
-          headers: { "Content-Type": "application/json", "auth-token": token },
+        const res = await fetch(`${API_URL}/orders/mine`, {   // <--- UPDATED
+          headers: { 
+            "Content-Type": "application/json",
+            "auth-token": token 
+          }
         });
+
         if (!res.ok) throw new Error(`Server returned ${res.status}`);
         const data = await res.json();
         if (!cancelled) setOrders(Array.isArray(data) ? data : []);
