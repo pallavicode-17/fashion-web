@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import { API_URL } from "../config";  // <--- NEW
+import { API_URL } from "../../../config"; // <--- NEW
 
 export const ShopContext = createContext(null);
 
