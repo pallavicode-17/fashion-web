@@ -4,6 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import "./PlaceOrder.css";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
 import { API_URL } from "../../../config";
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
 export default function PlaceOrder() {
   const navigate = useNavigate();
 
