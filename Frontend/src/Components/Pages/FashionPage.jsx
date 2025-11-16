@@ -1,28 +1,59 @@
-// src/pages/FashionPage/FashionPage.jsx  (adjust path if needed)
+// src/pages/FashionPage/FashionPage.jsx
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import "./FashionPage.css";
 import { ShopContext } from "../../Context/ShopContext"; // ensure this path + case matches your project
+import { API_URL } from "../../../config"; // <--- as requested (root import)
 
 export default function FashionPage() {
   const [menProducts, setMenProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   // use the context function (no local cart state)
   const { addToCart } = useContext(ShopContext);
 
   useEffect(() => {
-    fetch("http://localhost:4000/products?category=men&limit=4")
-      .then((res) => res.json())
-      .then((data) => setMenProducts(data))
-      .catch((err) => console.error("Failed to fetch men products:", err));
+    let cancelled = false;
+    setLoading(true);
+    setError("");
+
+    fetch(`${API_URL}/products?category=men&limit=4`)
+      .then((res) => {
+        if (!res.ok) throw new Error(`Server returned ${res.status}`);
+        return res.json();
+      })
+      .then((data) => {
+        if (!cancelled) setMenProducts(Array.isArray(data) ? data : []);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch men products:", err);
+        if (!cancelled) setError("Failed to load products. Try again later.");
+      })
+      .finally(() => {
+        if (!cancelled) setLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
+  function imageUrl(item) {
+    // prefer fields that may come from your backend
+    const img = item.img || item.image || item.imageUrl || "";
+    if (!img) return `${API_URL}/img/placeholder.png`; // fallback (optional)
+    if (img.startsWith("http://") || img.startsWith("https://")) return img;
+    if (img.startsWith("/")) return `${API_URL}${img}`;
+    return `${API_URL}/images/${img}`;
+  }
+
   function renderCard(item, key) {
-    const imgSrc = item.img || item.image || item.imageUrl || "/img/placeholder.png";
-    const title = item.title || item.name;
-    const price = item.price || item.new_price;
-    const oldPrice = item.oldPrice || item.old_price;
+    const imgSrc = imageUrl(item);
+    const title = item.title || item.name || "Product";
+    const price = item.price ?? item.new_price ?? 0;
+    const oldPrice = item.oldPrice ?? item.old_price ?? null;
 
     return (
       <div
@@ -32,7 +63,7 @@ export default function FashionPage() {
         style={{ cursor: "pointer" }}
       >
         <div className="fashion-img-box">
-          <img src={imgSrc} alt={title} />
+          <img src={imgSrc} alt={title} onError={(e) => (e.currentTarget.style.opacity = 0.6)} />
           {item.rating && <div className="fashion-rating">{item.rating}</div>}
           {item.color && <div className="fashion-color">{item.color}</div>}
           {item.size && <div className="fashion-size">Size: {item.size}</div>}
@@ -56,8 +87,12 @@ export default function FashionPage() {
             className="cart-btn"
             onClick={(e) => {
               e.stopPropagation(); // prevent card navigation
-              console.log("Add to cart clicked (context):", item.id);
-              addToCart(item.id); // call context addToCart with id
+              // context addToCart expects item id (per your ShopContext). If it expects full object, pass item instead.
+              if (typeof addToCart === "function") {
+                addToCart(item.id);
+              } else {
+                console.warn("addToCart not found in ShopContext");
+              }
             }}
           >
             Add to Cart
@@ -66,6 +101,9 @@ export default function FashionPage() {
       </div>
     );
   }
+
+  if (loading) return <div className="fashion-main">Loading products…</div>;
+  if (error) return <div className="fashion-main" style={{ color: "red" }}>{error}</div>;
 
   return (
     <div className="fashion-main">
