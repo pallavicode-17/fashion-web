@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductDisplay from "./ProductDisplay";
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com";// <--- ADD THIS
+const API_URL = "https://fashion-web-7skw.onrender.com";// <--- ADD THIS
 
 const ProductDetailPage = () => {
   const { id } = useParams();

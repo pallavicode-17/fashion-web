@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import './newcollection.css';
 import Item from '../Item/Item';
 // <--- IMPORTANT
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
+const API_URL = "https://fashion-web-7skw.onrender.coms";
 
 const NewCollections = () => {
   const [new_collection, setNew_Collection] = useState([]);

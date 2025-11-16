@@ -3,7 +3,7 @@ import React, { useContext, useState, useEffect } from "react";
 import { ShopContext } from "../../Context/ShopContext"; // << adjust relative path to match your project
 // import "./PlaceOrder.css"; // optional styles
 
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
+const API_URL = "https://fashion-web-7skw.onrender.com";
 const STATUS_OPTIONS = ["Order Packed", "Shipped", "Out for Delivery", "Delivered", "Cancelled"];
 
 export default function AdminOrders() {

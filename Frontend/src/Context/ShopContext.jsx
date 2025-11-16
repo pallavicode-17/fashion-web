@@ -2,7 +2,7 @@ import React, { createContext, useEffect, useState } from "react";
  // <--- NEW
 
 export const ShopContext = createContext(null);
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
+const API_URL = "https://fashion-web-7skw.onrender.com";
 const getDefaultCart = () => {
   const cart = {};
   for (let i = 0; i <= 300; i++) cart[i] = 0;

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import "./ProductList.css";
 import cross_icon from "../../assets/cart_cross_icon.png";
 
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // admin uses direct link
+const API_URL = "https://fashion-web-7skw.onrender.com"; // admin uses direct link
 
 const ProductList = () => {
   const [allProducts, setAllProducts] = useState([]);

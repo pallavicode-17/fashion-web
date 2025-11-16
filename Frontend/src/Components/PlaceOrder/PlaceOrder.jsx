@@ -3,7 +3,7 @@ import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./PlaceOrder.css";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // keep this import OR define const here, not both
+const API_URL = "https://fashion-web-7skw.onrender.com"; // keep this import OR define const here, not both
 
 export default function PlaceOrder() {
   const navigate = useNavigate();
