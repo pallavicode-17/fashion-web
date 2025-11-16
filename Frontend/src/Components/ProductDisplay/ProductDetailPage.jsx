@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductDisplay from "./ProductDisplay";
 
+import { API_URL } from "../config";   // <--- ADD THIS
+
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
@@ -11,7 +13,8 @@ const ProductDetailPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:4000/product/${id}`)
+
+    fetch(`${API_URL}/product/${id}`)   // <--- REPLACED LOCALHOST
       .then((res) => {
         if (!res.ok) throw new Error(`Server returned ${res.status}`);
         return res.json();
