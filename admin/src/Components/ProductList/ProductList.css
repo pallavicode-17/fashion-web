@@ -1,0 +1,71 @@
+/* ProductList.css - add these rules */
+.product-list {
+  width: 1277px;
+  padding: 20px;
+  background: #fff;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+  border-radius: 8px;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+.product-list h1 {
+  margin: 0 0 18px 0;
+  font-size: 22px;
+  color: #222;
+}
+
+.products-list-format-main {
+  display: grid;
+  grid-template-columns: 80px 2fr 1fr 1fr 1fr 40px;
+  gap: 12px;
+  align-items: center;
+  padding: 10px 6px;
+  font-weight: 600;
+  color: #444;
+}
+
+.product-list-format {
+  font-weight: 400;
+}
+
+.products-list-allproducts hr { border: none; border-top: 1px solid #eee; margin: 8px 0; }
+
+.product-list-producticon {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 6px;
+  display: block;
+}
+
+/* text cells */
+.products-list-format-main p {
+  margin: 0;
+  padding: 0 6px;
+  color: #333;
+}
+
+/* remove icon */
+.product-list-removeicon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.9;
+  transition: opacity .15s;
+}
+.product-list-removeicon:hover { opacity: 1; transform: scale(1.05); }
+
+/* responsive */
+@media (max-width: 720px) {
+  .products-list-format-main {
+    grid-template-columns: 60px 1fr 1fr;
+    grid-auto-rows: minmax(40px, auto);
+  }
+  /* hide some columns on small screens */
+  .products-list-format-main p:nth-child(3),
+  .products-list-format-main p:nth-child(4),
+  .products-list-format-main p:nth-child(5) {
+    display: none;
+  }
+}

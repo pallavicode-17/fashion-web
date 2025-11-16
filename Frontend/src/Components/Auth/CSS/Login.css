@@ -1,0 +1,131 @@
+/* Overall page container */
+.login-signup {
+  width: 100%;
+  min-height: 100vh;
+  background: #fce3fc; /* soft pink background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Center white box */
+.login-signup-container {
+  width: 480px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  padding: 40px 50px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-signup-container:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.login-signup-container h1 {
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: 600;
+  color: #3c3c3c;
+  text-align: center;
+}
+
+/* Input fields section */
+.login-signup-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  margin-top: 20px;
+}
+
+.login-signup-fields input {
+  height: 55px;
+  width: 100%;
+  padding: 0 15px;
+  border: 1.5px solid #d8d8d8;
+  border-radius: 8px;
+  outline: none;
+  color: #444;
+  font-size: 16px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-signup-fields input:focus {
+  border-color: #b82224;
+  box-shadow: 0 0 0 3px rgba(245, 123, 244, 0.2);
+}
+
+/* Continue button */
+.login-signup-container button {
+  width: 100%;
+  height: 55px;
+  color: #fff;
+  background:#D33c35;
+  border: none;
+  border-radius: 8px;
+  margin-top: 25px;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+
+}
+
+.login-signup-container button:hover {
+  background: #D33c35;
+  transform: scale(1.02);
+}
+
+/* Login text below */
+.login-signup-login {
+  margin-top: 20px;
+  text-align: center;
+  color: #5c5c5c;
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.login-signup-login span {
+  color: #D33c35;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+
+
+/* Checkbox + terms */
+.login-signup-agree {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+  gap: 12px;
+  color: #5c5c5c;
+  font-size: 15px;
+  font-weight: 400;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .login-signup-container {
+    width: 90%;
+    padding: 30px;
+  }
+
+  .login-signup-container h1 {
+    font-size: 26px;
+  }
+
+  .login-signup-fields input {
+    height: 50px;
+    font-size: 15px;
+  }
+
+  .login-signup-container button {
+    height: 50px;
+    font-size: 16px;
+  }
+}

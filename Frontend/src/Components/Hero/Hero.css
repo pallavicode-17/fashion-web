@@ -1,0 +1,94 @@
+.hero {
+    height: 100vh;
+    background: linear-gradient(180deg, #fde1ff, #e1ffea22 60%);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-family: 'Montserrat', 'Poppins', Arial, sans-serif;
+    padding: 0 60px;
+    box-sizing: border-box;
+}
+
+.hero-left {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    gap: 25px;
+    padding-left: 0; /* Remove or reduce the left padding */
+}
+
+.hero-left h2 {
+    color: #090909;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+}
+
+.hero-left p,
+.hero-left .main-title {
+    color: #171717;
+    font-size: 60px;  /* Much smaller than 100px */
+    font-weight: 700;
+    line-height: 0.95; /* Tighter lines */
+    margin: 0;
+}
+
+.hero-left .sub-title {
+    font-size: 36px;
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.hand-hand-icon {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.hand-hand-icon img {
+    width: 55px; /* Smaller icon */
+}
+
+.hero-latest-btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: max-content;
+    padding: 18px 36px;
+    height: unset; /* Let padding control height */
+    border-radius: 36px;
+    margin-top: 25px;
+    background-color: #ff4141;
+    color: white;
+    font-size: 22px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.hero-latest-btn:hover {
+    background: #d93636;
+}
+
+.hero-right {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: end;
+    height: 100%; /* Full height to vertically align */
+}
+
+.hero-right img {
+    max-width: 400px;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    background: transparent;
+    border-radius: 0;
+    box-shadow: none;
+}

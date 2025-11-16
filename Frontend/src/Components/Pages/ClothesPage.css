@@ -1,0 +1,79 @@
+.clothes-page-main {
+  display: flex;
+  gap: 32px;
+  align-items: flex-start;
+}
+
+.clothes-grid-container {
+  flex: 4;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 22px;
+  padding: 35px 25px;
+  background: #fafbfc;
+}
+
+.cart-sidebar {
+  flex: 1;
+  min-width: 260px;
+  max-width: 320px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 34px #ececec;
+  padding: 24px 16px;
+  margin-top: 18px;
+  transition: height 0.34s;
+  overflow-y: auto;
+}
+
+.cart-title {
+  font-size: 1.16em;
+  font-weight: 700;
+  color: #e53935;
+  margin-bottom: 16px;
+  letter-spacing: 1.1px;
+}
+
+.cart-list {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cart-list-item {
+  display: flex;
+  gap: 13px;
+  margin-bottom: 14px;
+  align-items: center;
+}
+
+.cart-thumb {
+  width: 54px;
+  height: 54px;
+  border-radius: 2px;
+  object-fit: cover;
+}
+
+.cart-item-title {
+  font-size: 1.01em;
+  flex: 1;
+}
+
+.cart-item-price {
+  color: #e53935;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.cart-btn {
+  margin-top: 10px;
+  background: #e53935;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 10px 22px;
+  font-size: 0.98em;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
