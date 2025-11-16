@@ -1,8 +1,7 @@
 // src/pages/LoginSignup.jsx
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './CSS/Login.css';
-import { API_URL } from '../config'; // adjust path if config.js is not in src/
+import { API_URL } from "../../../config"; // adjust path if config.js is not in src/
 
 const LoginSignup = () => {
   const [state, setState] = useState('Login');
