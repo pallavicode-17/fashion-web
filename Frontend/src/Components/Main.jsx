@@ -1,31 +1,33 @@
-// Main.jsx
-import "../style.css"
+// src/pages/Main.jsx  (adjust path if your file location differs)
+import "../style.css";
 import React, { useContext, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { ShopContext } from "../Context/ShopContext"; // use context instead of local static file
-import { banners } from "../assets/all_product"; // keep banner static if you want
+import { ShopContext } from "../Context/ShopContext";
+import { banners as staticBanners } from "../assets/all_product"; // if banners are static
+import { imageUrl } from "../utils/imageUrl"; // helper from above
+
+// Import UI assets so bundler includes them
+import ArrowLeft from "../assets/img/Arrow Left.png";
+import ArrowRight from "../assets/img/Arrow Right.png";
+import FurcoatImg from "../assets/img/furcoat.png";
+import BagsImg from "../assets/img/bags.png";
+import CoatbagImg from "../assets/img/coatbag.png";
 
 export default function Main() {
   const { all_product = [], addToCart } = useContext(ShopContext);
   const [currentIndex, setCurrentIndex] = useState(0);
   const navigate = useNavigate();
 
+  const banners = staticBanners || [];
+
   const goPrev = () =>
     setCurrentIndex(currentIndex === 0 ? banners.length - 1 : currentIndex - 1);
   const goNext = () =>
     setCurrentIndex(currentIndex === banners.length - 1 ? 0 : currentIndex + 1);
 
-  // small helpers: filter by text (optional)
-  const pantsAndJeans = all_product.filter(
-    (p) =>
-      p.title?.toLowerCase().includes("pants") ||
-      p.title?.toLowerCase().includes("jeans")
-  );
-
-  // Choose exact IDs to preserve layout. Update arrays as needed.
-  const men_featured_ids = [18,20]; // example ids for men row
-  const women_featured_ids = [8, 9];         // example ids for women area
-  const new_arrivals_ids = [10, 23, 7, 22]; // example ids for new arrivals
+  const men_featured_ids = [18, 20];
+  const women_featured_ids = [8, 9];
+  const new_arrivals_ids = [10, 23, 7, 22];
 
   const pickByIds = (ids) =>
     ids.map((id) => all_product.find((p) => Number(p.id) === Number(id))).filter(Boolean);
@@ -39,27 +41,31 @@ export default function Main() {
       {/* BANNER */}
       <div
         className="men_women"
-        style={{ backgroundImage: `url(${banners[currentIndex].image})` }}
+        style={{
+          backgroundImage: banners[currentIndex]?.image
+            ? `url(${banners[currentIndex].image.startsWith("http") ? banners[currentIndex].image : banners[currentIndex].image})`
+            : undefined,
+        }}
       >
         <div className="fashion-image" onClick={goPrev} style={{ cursor: "pointer" }}>
-          <img src="img/Arrow Left.png" alt="Previous" />
+          <img src={ArrowLeft} alt="Previous" />
         </div>
         <div className="arrow-right" onClick={goNext} style={{ cursor: "pointer" }}>
-          <img src="img/Arrow Right.png" alt="Next" />
+          <img src={ArrowRight} alt="Next" />
         </div>
         <div className="text-fas">
-          <p className="text-1">{banners[currentIndex].text1}</p>
-          <p className="text-2">{banners[currentIndex].text2}</p>
+          <p className="text-1">{banners[currentIndex]?.text1}</p>
+          <p className="text-2">{banners[currentIndex]?.text2}</p>
           <div className="for-line">
             <span className="line"></span>
-            <span className="for-text">{banners[currentIndex].lineText}</span>
+            <span className="for-text">{banners[currentIndex]?.lineText}</span>
             <span className="line"></span>
           </div>
-          <p className="text-4">{banners[currentIndex].text4}</p>
+          <p className="text-4">{banners[currentIndex]?.text4}</p>
         </div>
       </div>
 
-      {/* QUICK LINKS (unchanged) */}
+      {/* QUICK LINKS */}
       <div className="quick-links">
         <p>Go quickly to</p>
         <i className="fa-solid fa-arrow-right"></i>
@@ -80,7 +86,7 @@ export default function Main() {
         <Link to="/cap"><p>Caps & Hats</p></Link>
       </div>
 
-      {/* Category Cards (unchanged) */}
+      {/* Category Cards */}
       <div className="card-container">
         <div className="grey-slab"></div>
         <div className="card clothes">
@@ -120,7 +126,7 @@ export default function Main() {
           {men_featured.map((product) => (
             <div className="product-card" key={product.id}>
               <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <img src={product.image || `/${product.img}`} alt={product.title} />
+                <img src={imageUrl(product.image || product.img)} alt={product.title} />
                 <div className="product-label">{product.label || ""}</div>
                 <div className="product-details">
                   <span className="title">{product.title}</span>
@@ -160,7 +166,7 @@ export default function Main() {
           {women_featured.map((product) => (
             <div className="product-card-1" key={product.id}>
               <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-                <img src={product.image || `/${product.img}`} alt={product.title} />
+                <img src={imageUrl(product.image || product.img)} alt={product.title} />
                 <div className="product-details">
                   <span className="title">{product.title}</span>
                   <span className="price">{product.price || `Rs. ${product.new_price}`}</span>
@@ -196,19 +202,16 @@ export default function Main() {
           {new_arrivals.map((product) => (
             <div className="newarrivals-card" key={product.id}>
                <Link to={`/product/${product.id}`} style={{ textDecoration: "none", color: "inherit" }}>
-              <img src={product.image || `/${product.img}`} alt={product.title} className="fa-newarrivals-img" />
+              <img src={imageUrl(product.image || product.img)} alt={product.title} className="fa-newarrivals-img" />
               <div className="newarrivals-info">
                 <span className="newarrivals-title">{product.title}</span>
                 <span className="newarrivals-price">{product.price || `Rs. ${product.new_price}`}</span>
-                <div className="newarrivals-stars">{product.rating || "★★★★☆"}
-
-                </div>
+                <div className="newarrivals-stars">{product.rating || "★★★★☆"}</div>
                 </div>
                 </Link>
-                
+
                 <button className="newarrivals-cartbtn" onClick={() => addToCart(product.id)}>Add to cart</button>
               </div>
-           
           ))}
           <div className="grey-box3"></div>
         </div>
@@ -225,7 +228,7 @@ export default function Main() {
         <div className="blog-row">
           <div className="blog-card">
             <div className="blog-imgwrap">
-              <img src="img/furcoat.png" alt="Blog Image" className="blog-img" />
+              <img src={FurcoatImg} alt="Blog Image" className="blog-img" />
               <div className="blog-date">
                 <span className="blog-day">02</span>
                 <span className="blog-month">FEB</span>
@@ -241,7 +244,7 @@ export default function Main() {
 
           <div className="blog-card">
             <div className="blog-imgwrap">
-              <img src="img/bags.png" alt="Blog Image" className="blog-img" />
+              <img src={BagsImg} alt="Blog Image" className="blog-img" />
               <div className="blog-date">
                 <span className="blog-day">02</span>
                 <span className="blog-month">FEB</span>
@@ -257,7 +260,7 @@ export default function Main() {
 
           <div className="blog-card">
             <div className="blog-imgwrap">
-              <img src="img/coatbag.png" alt="Blog Image" className="blog-img" />
+              <img src={CoatbagImg} alt="Blog Image" className="blog-img" />
               <div className="blog-date">
                 <span className="blog-day">02</span>
                 <span className="blog-month">FEB</span>
