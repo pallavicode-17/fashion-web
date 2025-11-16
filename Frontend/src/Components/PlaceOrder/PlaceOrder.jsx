@@ -3,8 +3,8 @@ import React, { useContext, useMemo, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import "./PlaceOrder.css";
 import { ShopContext } from "../../Context/ShopContext"; // adjust path if needed
-import { API_URL } from "../../../config";
-const API_URL = "https://fashion-web-backend-nwvl.onrender.com";
+const API_URL = "https://fashion-web-backend-nwvl.onrender.com"; // keep this import OR define const here, not both
+
 export default function PlaceOrder() {
   const navigate = useNavigate();
 
@@ -111,10 +111,10 @@ export default function PlaceOrder() {
     };
 
     setLoading(true);
-  try {
+    try {
       let serverData = null;
 
-      // 💥 REPLACED localhost with API_URL
+      // use API_URL from import (or set const above if you prefer)
       const res = await fetch(`${API_URL}/orders`, {
         method: "POST",
         headers: {
@@ -147,6 +147,7 @@ export default function PlaceOrder() {
     } finally {
       setLoading(false);
     }
+  } // <-- THIS closes placeOrder
 
   return (
     <div className="placeorder-container">
