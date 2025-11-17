@@ -7,6 +7,7 @@ __🌐 Live Demo__
 - Module	URL
 - User Website (Frontend)	https://fashion-web-frontend.onrender.com
 - Admin Panel (Backend/Admin UI)	https://fashion-web-admin-0mby.onrender.com
+  
   __✨ Features__
 - 🧑‍🤝‍🧑 User Features
 - Browse fashion products (men, women, kids, accessories)
@@ -29,7 +30,6 @@ __Manage orders__
 
 __🧰 Tech Stack__
 - Frontend
-
 - React.js
 - React Router
 - Redux Toolkit
