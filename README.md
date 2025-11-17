@@ -1,75 +1,48 @@
 __🛍️ Fashion Web – Full Stack E-Commerce Application__
 
--A fully responsive MERN stack e-commerce application for fashion products.
+- A fully responsive MERN stack e-commerce application for fashion products.
 This project includes a User Website (Frontend) and an Admin Panel, both deployed on Render.
 
 __🌐 Live Demo__
 - Module	URL
 - User Website (Frontend)	https://fashion-web-frontend.onrender.com
-
 - Admin Panel (Backend/Admin UI)	https://fashion-web-admin-0mby.onrender.com
   __✨ Features__
 - 🧑‍🤝‍🧑 User Features
-
 - Browse fashion products (men, women, kids, accessories)
-
 - View product details
+- Add to cart & manage cart
+- User authentication (JWT + cookies)
+- Order placement
+- My Orders page with order status
 
--Add to cart & manage cart
+__🛠️ Admin Features__
 
-User authentication (JWT + cookies)
+- Admin authentication
+- Add, edit, delete products
+- Upload product images
 
-Order placement
+__Manage orders__
 
-My Orders page with order status
+- Update order status
+- Dashboard to view product & order analytics
 
-Secure payment flow (Stripe/Razorpay — if added)
+__🧰 Tech Stack__
+- Frontend
 
-Fully responsive UI
+- React.js
+- React Router
+- Redux Toolkit
+- CSS / Styled Components
+- Axios
+- Backend
+- Node.js
+- Express.js
+- MongoDB (Mongoose)
+- JWT Authentication
+- Multer for file uploads
 
-🛠️ Admin Features
-
-Admin authentication
-
-Add, edit, delete products
-
-Upload product images
-
-Manage orders
-
-Update order status
-
-Dashboard to view product & order analytics
-
-🧰 Tech Stack
-Frontend
-
-React.js
-
-React Router
-
-Redux Toolkit
-
-CSS / Styled Components
-
-Axios
-
-Backend
-
-Node.js
-
-Express.js
-
-MongoDB (Mongoose)
-
-JWT Authentication
-
-Multer for file uploads
-
-Deployment
-
-Render (Frontend + Backend)
-
-Cloudinary (if used) for image storage
-
-MongoDB Atlas (Cloud database)
+__Deployment__
+- Render (Frontend + Backend)
+- Cloudinary (if used) for image storage
+- MongoDB Atlas (Cloud database)
