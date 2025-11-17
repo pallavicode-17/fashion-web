@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import "./ProductList.css";
 import cross_icon from "../../assets/cart_cross_icon.png";
-import { imageUrl } from "../../utils/imageUrl";// adjust relative path if needed
+import { imageUrl } from "../../util/imageUrl";// adjust relative path if needed
 
 const API_URL = "https://fashion-web-7skw.onrender.com"; // admin uses direct link
 
@@ -12,12 +12,7 @@ const ProductList = () => {
   const [removingId, setRemovingId] = useState(null);
   const [error, setError] = useState("");
 
-  const imageUrl = (img) => {
-    if (!img) return "";
-    if (img.startsWith("http://") || img.startsWith("https://")) return img;
-    if (img.startsWith("/")) return `${API_URL}${img}`;
-    return `${API_URL}/images/${img}`;
-  };
+
 
   const fetchAllProducts = async () => {
     setLoading(true);
